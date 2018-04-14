@@ -38,5 +38,5 @@ function Letters() {
 
 var letterFunctions = new Letters();
 
-module.exports = letters;
+module.exports = Letters;
 

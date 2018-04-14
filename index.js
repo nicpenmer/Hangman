@@ -7,9 +7,9 @@ var prompt = require('prompt');
 console.log("success.")
 
 
-var numBlanks = 0;
 // Holds a mix of blank and solved letters (ex: 'n, _ _, n, _').
 var blanksAndSuccesses = [];
+
 // Holds all of the wrong guesses
 var wrongGuesses = [];
 // Game counters
@@ -20,35 +20,71 @@ var numGuesses = 9;
 var chosenWord = "";
 // This will break the solution into individual letters to be stored in array.
 var lettersInChosenWord = [];
+var gamerOver = false;
 
 ///guess the word "start game"
 function startGame(){
+    
     console.log("Guess the word.");
     //set number of guesses
     numGuesses = 9; 
-    //pick a random word from list
-    var chosenWord = wordList[Math.floor(Math.random() * wordList.length)];
-    lettersInChosenWord = chosenWord.split("");
-    // We count the number of letters in the word.
-    numBlanks = lettersInChosenWord.length;
-    // We print the solution in console (for testing).
-    console.log(chosenWord);
-    // CRITICAL LINE - Here we *reset* the guess and success array at each round.
+    // *reset* the guess and success array at each round.
     blanksAndSuccesses = [];
-    // CRITICAL LINE - Here we *reset* the wrong guesses from the previous round.
+    // *reset* the wrong guesses from the previous round.
     wrongGuesses = [];
     // Fill up the blanksAndSuccesses list with appropriate number of blanks.
     // This is based on number of letters in solution.
     for (var i = 0; i < numBlanks; i++) {
       blanksAndSuccesses.push("_");
     }
+    if (numGuesses > 0){
+      
+    }
 }
 
-///
+function userGuess(){
+	if(numGuesses > 0 && !gameOver){
+
+		// Display the correctly guessed letters
+    console.log(chosenWord.word());
+    //uses inquirer to promot a guess. 
+		inquirer.prompt([
+			{
+				type: "input",
+				name: "guess",
+				message: "Guess a letter!",
+
+				// only accept 1 character responses
+				validate: function(value){
+					return value.length === 1;
+				}
+			}
+		]).then(user => {
+			// Check if the user's guess reveals any hidden letters
+			if(chosenWord.userGuess(user.guess) === true){
+				console.log("correct.");
+
+			}else {
+				console.log("incorrect.");
+				numGuesses--;
+				console.log("Guesses left: " + numGuesses );
+			}
+
+			//  prompt the player to guess again
+			userGuess();
+		});
+
+
+///prompts new game
 function promptNewGame(){
   console.log("Would you like to play again?");
-  prompt
+  console.log("Yes? or No?")
+  if ("Yes" || "y") {
+    startGame();
+  }else ("Perhaps another time.");
 }
+
+//calls the start game and prompt new game functions
 startGame();
 promptNewGame();
 
